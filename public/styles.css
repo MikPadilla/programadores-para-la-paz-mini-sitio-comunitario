@@ -1,13 +1,211 @@
-input {
-    padding: 10px;
-    border: 1px solid #999999;
-    border-radius: 6px;
-    width: 100%;
-    max-width: 320px;
+:root {
+  --color-fondo: #f6f7f9;
+  --color-superficie: #ffffff;
+  --color-texto: #1a1d23;
+  --color-texto-suave: #5c6370;
+  --color-acento: #2d6a4f;
+  --color-acento-claro: #40916c;
+  --color-borde: #e2e6eb;
+  --fuente-cuerpo: "DM Sans", system-ui, sans-serif;
+  --fuente-titulos: "Playfair Display", Georgia, serif;
+}
+
+body {
+  font-family: var(--fuente-cuerpo);
+  margin: 0;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.6;
+}
+
+header {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7f4 100%);
+  padding: 3rem 1.5rem 2.5rem;
+  border-bottom: 1px solid var(--color-borde);
+  text-align: center;
+}
+
+header h1 {
+  font-family: var(--fuente-titulos);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+  background: linear-gradient(135deg, #1a1d23 0%, var(--color-acento) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+header p {
+  max-width: 42rem;
+  margin: 0 auto;
+  color: var(--color-texto-suave);
+  font-size: 1.05rem;
+}
+
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+section {
+  background: var(--color-superficie);
+  margin-bottom: 1.5rem;
+  padding: 1.75rem 1.5rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+section h2 {
+  font-family: var(--fuente-titulos);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 600;
+  color: var(--color-texto);
+  margin: 0 0 1rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 2px solid var(--color-acento-claro);
+  position: relative;
+}
+
+section h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 3rem;
+  height: 2px;
+  background: var(--color-acento);
+}
+
+h3 {
+  font-family: var(--fuente-cuerpo);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-acento);
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+button {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 14px;
+  border: 1px solid var(--color-acento);
+  background: var(--color-superficie);
+  color: var(--color-acento);
+  cursor: pointer;
+  border-radius: 6px;
+  font-family: var(--fuente-cuerpo);
+  font-weight: 500;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+button:hover {
+  background: var(--color-acento);
+  color: var(--color-superficie);
+  box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+button.btn-clic {
+  animation: btnPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes btnPop {
+  0% {
+    transform: scale(1);
   }
-  
-  #mensajeLogin {
-    margin-top: 12px;
-    font-weight: bold;
+
+  25% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(64, 145, 108, 0.5);
   }
-  
+
+  55% {
+    transform: scale(1.06);
+    box-shadow: 0 0 22px 6px rgba(64, 145, 108, 0.35);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+  }
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  transform: scale(0);
+  animation: rippleExpand 0.65s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleExpand {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button,
+  button.btn-clic,
+  .ripple {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  button:active {
+    transform: none;
+  }
+}
+
+.tablero {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.tarjeta-mensaje {
+  background: #fafafa;
+  border: 1px solid var(--color-borde);
+  border-left: 6px solid var(--color-acento);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  background: var(--color-superficie);
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
+}
+
+.texto-secundario {
+  color: var(--color-texto-suave);
+  font-size: 0.95rem;
+}
+
+.aviso-seguridad {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  padding: 12px;
+  border-radius: 8px;
+}

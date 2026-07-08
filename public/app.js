@@ -14,6 +14,74 @@ const clave = document.getElementById("clave")
 const btnRevisionEditorial = document.getElementById("btnRevisionEditorial")
 const contenedorRevisionEditorial = document.getElementById("contenedorRevisionEditorial")
 
+let contextoAudio = null
+
+function reproducirSonidoClick() {
+  try {
+    if (!contextoAudio) {
+      contextoAudio = new (window.AudioContext || window.webkitAudioContext)()
+    }
+
+    const ahora = contextoAudio.currentTime
+
+    const oscilador = contextoAudio.createOscillator()
+    const ganancia = contextoAudio.createGain()
+
+    oscilador.connect(ganancia)
+    ganancia.connect(contextoAudio.destination)
+
+    oscilador.type = "sine"
+    oscilador.frequency.setValueAtTime(620, ahora)
+    oscilador.frequency.exponentialRampToValueAtTime(980, ahora + 0.06)
+
+    ganancia.gain.setValueAtTime(0.0001, ahora)
+    ganancia.gain.exponentialRampToValueAtTime(0.18, ahora + 0.01)
+    ganancia.gain.exponentialRampToValueAtTime(0.0001, ahora + 0.14)
+
+    oscilador.start(ahora)
+    oscilador.stop(ahora + 0.14)
+  } catch (_) {
+    // Silencioso si el navegador bloquea el audio
+  }
+}
+
+function animarBoton(boton, evento) {
+  boton.classList.remove("btn-clic")
+  void boton.offsetWidth
+  boton.classList.add("btn-clic")
+
+  setTimeout(() => boton.classList.remove("btn-clic"), 450)
+
+  const onda = document.createElement("span")
+  onda.classList.add("ripple")
+
+  const rect = boton.getBoundingClientRect()
+  const tamano = Math.max(rect.width, rect.height)
+
+  onda.style.width = `${tamano}px`
+  onda.style.height = `${tamano}px`
+  onda.style.left = `${evento.clientX - rect.left - tamano / 2}px`
+  onda.style.top = `${evento.clientY - rect.top - tamano / 2}px`
+
+  boton.appendChild(onda)
+  onda.addEventListener("animationend", () => onda.remove())
+}
+
+function inicializarEfectosBotones() {
+  const reducirMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+  document.querySelectorAll("button").forEach((boton) => {
+    boton.addEventListener("click", (evento) => {
+      if (!reducirMovimiento) {
+        animarBoton(boton, evento)
+      }
+      reproducirSonidoClick()
+    })
+  })
+}
+
+inicializarEfectosBotones()
+
 btnRevisionEditorial.addEventListener("click", () => {
     cargarRevisionEditorial()
   })
